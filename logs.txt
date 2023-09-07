@@ -1,0 +1,59 @@
+https://portal.esstu.ru/bakalavriat/raspisan.htm // url 
+https://portal.esstu.ru/bakalavriat/45.htm // raspisaniya b743
+
+// sayt logikasi 
+// manimcha hamma narsa alohida blokdan iborat 
+// hozircha shundo
+
+https://portal.esstu.ru/bakalavriat // bu asosi ssilka + i.html gruppa
+
+
+# tbody 
+# print(soup.original_encoding)
+
+# soup.encode("latin-1").decode('cp1251')
+
+# for link in soup.find_all('font'):
+#     link = link.get_text()
+#     print(link.encode("latin-1").decode('cp1251'))
+#     i += 1
+
+# raspisaniya = []
+
+# temp_nedelya = []
+# indecator = True
+# int_indecator = True
+# int_for_indicator = 0
+# nedeliya = 'Пнд'
+# for link in soup.find_all('font'):
+#     link = link.get_text()
+#     text = link.encode("latin-1").decode('cp1251')
+#     if int_for_indicator == 6 : 
+#         int_indecator = False
+#     else :
+#         int_indecator = True
+#     if (text == 'Пнд' or text == 'Втр' or text == 'Срд' or text == 'Чтв' or text == 'Птн' or text == 'Сбт') or int_indecator :
+#         indecator =  True
+#     if indecator:
+#         temp_nedelya.append(text)
+#         print(text)
+#     i += 1
+#     int_for_indicator += 1
+
+    # temp_arr = [] 
+    # for n in len(text):
+    #     temp_arr.append(text[n])
+    # text = text.get_text()
+    # text = text.encode("latin-1").decode('cp1251')
+    # # print(text)
+    # arr.append(temp_arr)
+    # print('----->')
+
+
+# print(soup.get_text().encode("latin-1").decode('cp1251'))
+
+{"message_id": 714, 
+    "from": {"id": 5163141099, "is_bot": false, "first_name": "Behruz", "last_name": "Begmatov", "username": "behruzbegmatov", "language_code": "ru"},
+    "chat": {"id": 5163141099, "first_name": "Behruz", "last_name": "Begmatov", "username": "behruzbegmatov", "type": "private"}, 
+    "date": 1694089699, "text": "/start", 
+    "entities": [{"type": "bot_command", "offset": 0, "length": 6}]}
