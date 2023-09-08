@@ -2,9 +2,6 @@ import aiogram
 import config
 import requests
 import logging
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
 import random
 from aiogram.types import ChatActions
 from aiogram import Bot, Dispatcher, executor, types
@@ -16,8 +13,12 @@ import requests
 from bs4 import BeautifulSoup
 # IMport Database
 import database
+import which_day
 
+import asyncio
+import aiocron
 
+admin_id = 5163141099 # Id of admin / for e/x Behruz
 logging.basicConfig(level=logging.INFO)
 
 # from bot import category as bot_categoriy_list
@@ -70,22 +71,56 @@ async def send_welcome(message: types.Message):
     if database.chesk_user_into_database( user_id=message.chat.id , chat_id=message.chat.id ):
         # print(message)
         database.adding_user_to_data_base(user_id=message.chat.id , chat_id=message.chat.id , user_name=message.chat.first_name , user_surname=message.chat.last_name)
-        await bot.send_sticker(message.chat.id , sticker='CAACAgIAAxkBAAEKOgJk9v01ThGdXzaBYWKK0eE_kFmAhgACNhYAAlxA2EvbRm7S3ZV6DTAE')
+        await bot.send_sticker(message.chat.id , sticker='CAACAgIAAxkBAAEKPlZk-eLKS3tUCG_aRGY1wZjJY8tnxAACxgEAAhZCawpKI9T0ydt5RzAE')
         await message.reply("Привет! " + message.chat.first_name + " !\nДобро пожаловать в бот группу B743")
         await bot.send_message(message.chat.id , 'выберите неделю 🗓️' , reply_markup=hello)
     else :
-        await bot.send_sticker(message.chat.id , sticker='CAACAgIAAxkBAAEKOgJk9v01ThGdXzaBYWKK0eE_kFmAhgACNhYAAlxA2EvbRm7S3ZV6DTAE')
+        await bot.send_sticker(message.chat.id , sticker='CAACAgIAAxkBAAEKPlhk-eL1_yehX1XkfY7ij6piNAqDSwACywEAAhZCawqjQZ8C-a857jAE')
         await message.reply("Привет! " + message.chat.first_name + " !\nMi pomnim tebya , rad videt tebya в бот группу B743")
         await bot.send_message(message.chat.id , 'выберите неделю 🗓️' , reply_markup=hello)
     print(message)
     
 @dp.message_handler(commands=['help'])
 async def help_command(message: types.Message):
-    await message.reply(message.chat.id , '❗️Внимание❗️ \nЭтот бот назодится в стадии разработки и тестирование.🛠️\nПри возникновение ощибки или бага , пожалуста отправте скриншот @behruzbegmatov 😉.\nСпасибо за исползование нашего бота❤️')
+    if message.chat.id == admin_id :
+        await bot.send_message(message.chat.id , '/rassilka - for send message to all users\n/all_users - for get a list all of users')
+    else:
+        await message.reply(message.chat.id , '❗️Внимание❗️ \nЭтот бот назодится в стадии разработки и тестирование.🛠️\nПри возникновение ощибки или бага , пожалуста отправте скриншот @behruzbegmatov 😉.\nСпасибо за исползование нашего бота❤️')
 
 @dp.message_handler(commands=['menu'])
 async def help_command(message: types.Message):
     await message.reply('выберите неделю 🗓️' , reply_markup=hello)
+
+@dp.message_handler(commands=['rassilka'])
+async def help_command(message: types.Message):
+    if message.chat.id == admin_id:
+        users = database.gat_all_users()
+        mesage = message.text
+        mesage = mesage.replace('/rassilka' , '')
+        for user in users:
+            try:
+                await bot.send_message(user[1] , mesage)
+            except Exception as e:
+                print(f"Ошибка при отправке сообщения в чат {user[1]}: {str(e)}")
+
+@dp.message_handler(commands=['all_users'])
+async def botusers(message : types.Message):
+    if message.chat.id == admin_id:
+        users = database.gat_all_users()
+        for user in users:
+            mes = ''
+            mes += 'id : ' + str(user[0]) + '\n'
+            mes += 'user_id : ' + str(user[1]) + '\n'
+            mes += 'user_name : ' + str(user[2]) + '\n'
+            mes += 'user_surname : ' + str(user[3])
+            await bot.send_message(message.chat.id , mes)
+    else :
+        await bot.send_message(message.chat.id , 'You are not an admin !')
+@aiocron.crontab('0 7 * * *')
+async def send_evry_seven():
+    day = which_day.get_dey_of_weak()
+
+
 @dp.message_handler()
 async def echo(message: types.Message):
     global index_of_day
@@ -263,4 +298,5 @@ async def echo(message: types.Message):
                     await bot.send_message(message.chat.id , ansver )
 
 if __name__ == '__main__':
+    from aiogram import executor
     executor.start_polling(dp, skip_updates=True)
